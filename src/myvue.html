@@ -3,6 +3,7 @@
 
 <head>
 	<title></title>
+	<meta http-equiv="content-type" content="text/html;charset=utf-8">
 	<style>
 		body {
 			font-size: 8vw;
@@ -28,6 +29,7 @@
 			</span>
 			<p v-if="seen">Now you see me</p>
 			<input v-model="message">
+			<p>Computed reversed message: "{{ reversedMessage }}"</p>
 			<button v-on:click="reverseMessage">Reverse Message</button>
 			<ol>
 				<li v-for="todo in todos">
@@ -64,17 +66,29 @@
 				{ text: 'Learn JavaScript' },
 				{ text: 'Learn Vue' },
 				{ text: 'Build something awesome' }
-				]
+				],
+				iscreate: "yes"
 			},
 			methods: {
 				reverseMessage: function () {
-					this.message = this.message.split('').reverse().join('')
+					this.message = this.message.split(' ').reverse().join(' ')
 				}
-			}
+			},
+			created: function () {
+				// `this` 指向 vm 实例
+				console.log('iscreate is: ' + this.iscreate)
+				},
+			computed: {
+				// a computed getter
+				reversedMessage: function () {
+				// `this` points to the vm instance
+				return this.message.split(' ').reverse().join(' ')
+				}
+				}
 		})
 
 		app2.$watch('message', function (newVal, oldVal) {
-			alert("抓住你了！");
+			console.log("抓住你了！"+this.message);
 			})
 	</script>
 </body>
