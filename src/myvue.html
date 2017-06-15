@@ -1,11 +1,80 @@
-<div id="app">
-  {{ message }}
-</div>
-<script>
-var app = new Vue({
-  el: '#app',
-  data: {
-    message: 'Hello Vue!'
-  }
-})
-</script>
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title></title>
+	<style>
+		body {
+			font-size: 8vw;
+			color: #333;
+			position: relative;
+		}
+		.mywrap > div{
+			border-bottom: 2px dashed #0f0f0f;
+			margin-bottom: 20px
+		}
+	</style>
+</head>
+
+<body>
+	<div class="mywrap">
+		<div id="app">
+			{{ message }}
+		</div>
+
+		<div id="app-2">
+			<span v-bind:title="message">
+				Hover your mouse over me for a few seconds to see my dynamically bound title!
+			</span>
+			<p v-if="seen">Now you see me</p>
+			<input v-model="message">
+			<button v-on:click="reverseMessage">Reverse Message</button>
+			<ol>
+				<li v-for="todo in todos">
+					{{ todo.text }}
+				</li>
+				<todo-item v-for="todo in todos" v-bind:todo="todo"></todo-item>
+			</ol>
+		</div>
+	</div>
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+	<script>
+
+	    Vue.component('todo-item', {
+		  // The todo-item component now accepts a
+		  // "prop", which is like a custom attribute.
+		  // This prop is called todo.
+		  props: ['todo'],
+		  template: '<li>{{ todo.text }}</li>'
+		})
+
+		var app = new Vue({
+			el: '#app',
+			data: {
+				message: 'Hello Vue!'
+			}
+		})
+
+		var app2 = new Vue({
+			el: '#app-2',
+			data: {
+				message: 'You loaded this page on ' + new Date(),
+				seen: true,
+				todos: [
+				{ text: 'Learn JavaScript' },
+				{ text: 'Learn Vue' },
+				{ text: 'Build something awesome' }
+				]
+			},
+			methods: {
+				reverseMessage: function () {
+					this.message = this.message.split('').reverse().join('')
+				}
+			}
+		})
+
+		
+	</script>
+</body>
+
+</html>
