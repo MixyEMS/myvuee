@@ -6,21 +6,50 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { HOST_CONCIG, KEY_CONFIG } from '../config/api-config'
+import { getUrlKey } from '../common/string_api'
+
 export default {
   name: 'main',
   data () {
     return {
-      msg: 'Welcome to Mixy weibo.js App'
+      msg: 'Welcome to Mixy weibo.js App',
+      list:[]
     }
   },
-  methods: {
-    oauth () {
-      var clientId = KEY_CONFIG.app_key
-      var redirectUri = KEY_CONFIG.redirect_uri
-      var oauthUrl = HOST_CONCIG.oauth
-      window.open(oauthUrl + '?client_id=' + clientId + '&redirect_uri=' + redirectUri, '_self', '', true)
+  created (){
+
+    const accesstoken = getUrlKey('code');
+    console.log(accesstoken)
+    var request_data = {
+        access_token: accesstoken,
+        count: 30,
+        page: 1,
+        appkey:KEY_CONFIG.app_key
     }
+
+    var config = {
+        method: 'get',
+        url: 'https://api.weibo.com/2/statuses/public_timeline.json',
+        baseURL: 'https://api.weibo.com/',
+        params: request_data,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+
+    axios(config)
+        .then(function (response) {
+            logger("oauthPost-ok", 'getHomeTimeline response succeed')
+            this.list = response;
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+  },
+  methods: {
+   
   }
 }
 </script>
