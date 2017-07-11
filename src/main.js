@@ -10,8 +10,8 @@ import store from './store/'
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  store,
-  router,
+  // store,
+  // router,
   template: '<App/>',
   components: { App }
 })
