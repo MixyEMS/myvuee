@@ -12,17 +12,19 @@
        </div>
        <div class="list_items">
            <div class="item">
-              <div class="item_info">
+              <div class="item_info" v-for="item in list">
                   <input type="checkbox" name="checkitem">
-                  <img src="./assets/img1.jpg" alt="">
-                  <span class="iname">一盒水果</span>
-                  <span class="present">一串葡萄</span>
+                  <img  alt="" :src="item.proimg">
+                  <span class="iname">{{item.proname}}</span>
+                  <span class="present">
+                    <span v-for="part in item.parts">{{part.partsname}}<br></span>
+                  </span>
               </div>
-              <div class="item_price"> ￥19.00</div>
+              <div class="item_price"> {{item.proprice | formatmoney}}</div>
               <div class="item_count">
-                  <input type="number" name="itemcount" min="0">
+                  <input type="number" name="itemcount" min="0" :value="item.procount" v-model="item.procount">
               </div>
-              <div class="item_totleprice">￥38.00</div>
+              <div class="item_totleprice">{{item.proprice*item.procount | formatmoney}}</div>
               <div class="item_edit">
                  <a href="javascript:void(0);" class="delete">删除</a>
               </div>
@@ -41,17 +43,45 @@
 <script>
 // 导入组件
 // import { mapGetters } from 'vuex'
-// 
-import VueResource from 'vue-resource'
-Vue.use(VueResource);
+
+
 export default {
   name: 'app',
    data () {
     return {
-      title:"haha"
+         title:"haha",
+         totalMoney:"0"
     }
   },
-  components: {
+  mounted:function(){
+       this.$nextTick(function(){
+           this.cartView();
+       });
+  },
+  watch: {
+       
+    },
+  computed:{
+    list:function(){
+          return[];
+    }
+  },
+  filters: {
+            formatmoney: function (value) {
+              if (!value) return ''
+              value = value.toString()
+              return "￥"+value.toFixed(2);
+            }
+          },
+  methods:{
+             cartView:function(){
+                 let _this = this;
+                 _this.$http.get("static/jsondata.json",{}).then(res=>{
+                       _this.list = res.result.list;
+                       _this.totalMoney = res.result.totleMoney;
+                       console.log(res);
+                 });
+             }
   }
 }
 
